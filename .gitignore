@@ -1,0 +1,30 @@
+# Build folders
+bin/
+obj/
+Debug/
+Release/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# NuGet
+*.nupkg
+packages/
+*.snupkg
+
+# ASP.NET / ASP.NET Core
+wwwroot/
+appsettings.*.json   # bỏ qua file config môi trường
+
+# Others
+*.log
+*.DS_Store
+*.tmp
+*.cache
