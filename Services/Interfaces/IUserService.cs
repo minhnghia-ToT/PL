@@ -1,10 +1,8 @@
 ﻿using PFL_API.Models.DTO;
 
-namespace PFL_API.Services.Interfaces
+public interface IUserService
 {
-    public interface IUserService
-    {
-        Task<List<UserProfileDto>> GetAllUsersWithProfilesAsync();
-        Task<Guid> CreateProfileAsync(CreateUserProfileDto dto);
-    }
+    Task<IEnumerable<UserProfileDto>> GetAllUsersWithProfilesAsync();
+
+    Task<int> CreateUserProfileAsync(CreateUserProfileDto dto);
 }

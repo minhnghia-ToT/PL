@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PFL_API.Data;
 using PFL_API.Services.Interfaces;
+/*using PFL_API.Services.Implementations; */
+// Remove or comment out this line if the Services namespace does not exist
+// using PFL_API.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,11 +12,13 @@ var builder = WebApplication.CreateBuilder(args);
 // =======================
 
 builder.Services.AddControllers();
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// ===== DbContext (SQL Server) =====
+// =======================
+// DbContext (SQL Server)
+// =======================
+
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(
@@ -21,7 +26,18 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     );
 });
 
-// (Tuỳ chọn) log SQL khi debug
+// =======================
+// Dependency Injection
+// =======================
+
+// User
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
+
+// =======================
+// Logging (dev)
+// =======================
+
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddLogging(logging =>
@@ -29,8 +45,6 @@ if (builder.Environment.IsDevelopment())
         logging.AddConsole();
     });
 }
-
-builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 
@@ -46,11 +60,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// ❌ Chưa dùng Authentication
-// app.UseAuthentication();
-
+// app.UseAuthentication(); // chưa dùng
 app.UseAuthorization();
 
 app.MapControllers();
-
 app.Run();
