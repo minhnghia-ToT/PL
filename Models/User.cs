@@ -1,13 +1,10 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace PFL_API.Models
+﻿namespace PFL_API.Models
 {
     public class User
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }   // Identity (INT)
 
-       /* public string PasswordHash { get; set; }*/
-        public string? Email { get; set; }   // chỉ để liên hệ, không dùng login
+        public string Email { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
 
         public Profile? Profile { get; set; }
