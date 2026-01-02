@@ -1,14 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PFL_API.Data;
 using PFL_API.Services.Interfaces;
-/*using PFL_API.Services.Implementations; */
-// Remove or comment out this line if the Services namespace does not exist
-// using PFL_API.Services.Interfaces;
+/*using PFL_API.Services.Implementations;*/
 
 var builder = WebApplication.CreateBuilder(args);
 
 // =======================
-// Add services
+// ADD SERVICES
 // =======================
 
 builder.Services.AddControllers();
@@ -16,7 +14,23 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // =======================
-// DbContext (SQL Server)
+// CORS (BẮT BUỘC CHO FE)
+// =======================
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy
+                .WithOrigins("http://localhost:3000")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
+
+// =======================
+// DB CONTEXT
 // =======================
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -27,29 +41,16 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 
 // =======================
-// Dependency Injection
+// DEPENDENCY INJECTION
 // =======================
 
-// User
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
-
-// =======================
-// Logging (dev)
-// =======================
-
-if (builder.Environment.IsDevelopment())
-{
-    builder.Services.AddLogging(logging =>
-    {
-        logging.AddConsole();
-    });
-}
 
 var app = builder.Build();
 
 // =======================
-// Configure pipeline
+// MIDDLEWARE PIPELINE
 // =======================
 
 if (app.Environment.IsDevelopment())
@@ -60,8 +61,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// ⚠️ CORS PHẢI ĐẶT TRƯỚC AUTH
+app.UseCors("AllowFrontend");
+
 // app.UseAuthentication(); // chưa dùng
 app.UseAuthorization();
 
 app.MapControllers();
+
 app.Run();
