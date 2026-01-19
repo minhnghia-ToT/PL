@@ -157,4 +157,120 @@ public class ProfileService : IProfileService
             }).ToList()
         };
     }
+    // =======================
+    // ADD SINGLE PROFILE
+    // =======================
+    public async Task AddSingleProfileAsync(CreateProfileRequest request)
+    {
+        var profile = await _context.Profiles
+            .Include(p => p.Educations)
+            .Include(p => p.Projects)
+            .FirstOrDefaultAsync(p => p.Id == 1);
+
+        if (profile != null)
+            throw new Exception("Profile already exists");
+
+        profile = new Profile
+        {
+            Id = 1,
+            UserId = request.UserId,
+            FullName = request.FullName,
+            Dob = request.Dob,
+            Phone = request.Phone,
+            Address = request.Address,
+            CareerObjective = request.CareerObjective,
+            Summary = request.Summary
+        };
+
+        // Educations
+        if (request.Educations != null && request.Educations.Any())
+        {
+            profile.Educations = request.Educations.Select(e => new Education
+            {
+                SchoolName = e.SchoolName,
+                Major = e.Major,
+                Degree = e.Degree,
+                StartDate = e.StartDate.HasValue
+                    ? DateOnly.FromDateTime(e.StartDate.Value)
+                    : null,
+                EndDate = e.EndDate.HasValue
+                    ? DateOnly.FromDateTime(e.EndDate.Value)
+                    : null
+            }).ToList();
+        }
+
+        // Projects
+        if (request.Projects != null && request.Projects.Any())
+        {
+            profile.Projects = request.Projects.Select(p => new Project
+            {
+                Name = p.Name,
+                Description = p.Description,
+                Technologies = p.Technologies,
+                Role = p.Role,
+                ProjectUrl = p.ProjectUrl
+            }).ToList();
+        }
+
+        _context.Profiles.Add(profile);
+        await _context.SaveChangesAsync();
+    }
+    // =======================
+    // UPDATE SINGLE PROFILE
+    // =======================
+    public async Task UpdateSingleProfileAsync(CreateProfileRequest request)
+    {
+        var profile = await _context.Profiles
+            .Include(p => p.Educations)
+            .Include(p => p.Projects)
+            .FirstOrDefaultAsync(p => p.Id == 1);
+
+        if (profile == null)
+            throw new Exception("Profile not found");
+
+        // Clear dữ liệu cũ
+        _context.Educations.RemoveRange(profile.Educations);
+        _context.Projects.RemoveRange(profile.Projects);
+
+        // Update thông tin chung
+        profile.FullName = request.FullName;
+        profile.Dob = request.Dob;
+        profile.Phone = request.Phone;
+        profile.Address = request.Address;
+        profile.CareerObjective = request.CareerObjective;
+        profile.Summary = request.Summary;
+
+        // Educations
+        if (request.Educations != null && request.Educations.Any())
+        {
+            profile.Educations = request.Educations.Select(e => new Education
+            {
+                SchoolName = e.SchoolName,
+                Major = e.Major,
+                Degree = e.Degree,
+                StartDate = e.StartDate.HasValue
+                    ? DateOnly.FromDateTime(e.StartDate.Value)
+                    : null,
+                EndDate = e.EndDate.HasValue
+                    ? DateOnly.FromDateTime(e.EndDate.Value)
+                    : null
+            }).ToList();
+        }
+
+        // Projects
+        if (request.Projects != null && request.Projects.Any())
+        {
+            profile.Projects = request.Projects.Select(p => new Project
+            {
+                Name = p.Name,
+                Description = p.Description,
+                Technologies = p.Technologies,
+                Role = p.Role,
+                ProjectUrl = p.ProjectUrl
+            }).ToList();
+        }
+
+        await _context.SaveChangesAsync();
+    }
+
 }

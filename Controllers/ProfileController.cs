@@ -49,5 +49,19 @@ namespace PFL_API.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+        //add
+        [HttpPost("single_add")]
+        public async Task<IActionResult> Add(CreateProfileRequest request)
+        {
+            await _profileService.AddSingleProfileAsync(request);
+            return Ok();
+        }
+        //update
+        [HttpPut("update")]
+        public async Task<IActionResult> Update(CreateProfileRequest request)
+        {
+            await _profileService.UpdateSingleProfileAsync(request);
+            return Ok();
+        }
     }
 }
