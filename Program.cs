@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PFL_API.Data;
+using PFL_API.Services.Implementations;
 using PFL_API.Services.Interfaces;
 /*using PFL_API.Services.Implementations;*/
 
@@ -46,6 +47,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
 
 var app = builder.Build();
 
