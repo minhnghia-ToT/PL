@@ -57,11 +57,28 @@ namespace PFL_API.Controllers
             return Ok();
         }
         //update
-        [HttpPut("update")]
-        public async Task<IActionResult> Update(CreateProfileRequest request)
+        [HttpPut("{userId:int}")]
+        public async Task<IActionResult> UpdateProfile(
+     int userId,
+     [FromBody] CreateProfileRequest request
+ )
         {
-            await _profileService.UpdateSingleProfileAsync(request);
-            return Ok();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (request.UserId != userId)
+                return BadRequest(new { message = "UserId mismatch" });
+
+            try
+            {
+                await _profileService.CreateProfileAsync(request);
+                return Ok(new { message = "Profile updated successfully" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
+
     }
 }

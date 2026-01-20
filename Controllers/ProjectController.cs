@@ -53,16 +53,16 @@ namespace PFL_API.Controllers
         // =========================
         // UPDATE
         // =========================
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, UpdateProjectDto dto)
-        {
-            var result = await _projectService.UpdateProjectAsync(id, dto);
+            [HttpPut("{id}")]
+            public async Task<IActionResult> Update(int id, UpdateProjectDto dto)
+            {
+                var result = await _projectService.UpdateProjectAsync(id, dto);
 
-            if (result == null)
-                return NotFound("Project not found");
+                if (result == null)
+                    return NotFound("Project not found");
 
-            return Ok(result);
-        }
+                return Ok(result);
+            }
 
         // =========================
         // DELETE
